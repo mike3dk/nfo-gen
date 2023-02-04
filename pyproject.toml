@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "nfo-gen"
+version = "0.1.0"
+description = ""
+authors = ["Michael Kang <michael3dk@gmail.com>"]
+readme = "README.md"
+packages = [{include = "nfo_gen"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
