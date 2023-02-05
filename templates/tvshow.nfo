@@ -3,6 +3,13 @@
   <title>{{ title }}</title>
   <uniqueid type="learn" default="true"></uniqueid>
   <year>{{ year }}</year>
+  <premiered>{{ year }}</premiered>
+  <director>{{ author }}</director>
   <studio>{{ source }}</studio>
   <genre>{{ tags }}</genre>
+  <tag>{{ tag }}</tag>
+  <url>{{ url }}</url>
+  <thumb>
+    {{ image }}
+  </thumb>
 </tvshow>

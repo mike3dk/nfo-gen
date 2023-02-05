@@ -30,6 +30,7 @@ def write_gsheet(df):
         # url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
 
         wks = gsheet[0]
+        wks.clear()
         wks.set_dataframe(df, (1, 1), nan="")
     except Exception as err:
         print(err)

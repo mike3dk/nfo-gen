@@ -38,6 +38,7 @@ def process(title, path, df):
             "tags": row_found.iloc[0]["tags"],
             "author": row_found.iloc[0]["author"],
             "url": row_found.iloc[0]["url"],
+            "image": row_found.iloc[0]["image"],
             "found": "yes",
         }
     )
