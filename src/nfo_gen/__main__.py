@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from jinja2 import Environment, FileSystemLoader
+import src.ansicolor as c
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
@@ -32,27 +33,27 @@ def process(show_root):
 
     environment = Environment(loader=FileSystemLoader("templates"))
     template = environment.get_template("tvshow.nfo")
-    rendered = template.render(name=show_root.name)
+    rendered = template.render(title=show_root.name)
 
-    filename = show_root.parent / "tvshow.nfo"
+    filename = show_root / "tvshow.nfo"
     print(filename)
     with open(filename, mode="w", encoding="utf-8") as message:
         message.write(rendered)
-        print(f"... wrote {filename}")
+        print(f"{c.YELLOW}... wrote {filename}{c.ENDC}")
 
 
 def main(argv: Optional[List[str]] = None) -> None:
     args = parse_args(argv)
     source = Path(args.input_directory).expanduser().resolve()
-    print(f">>> nfo gen: {source}")
+    print(f"{c.BLUE}>>> nfo gen: {source}{c.ENDC}")
+
+    source_depth = len(source.parents)
 
     for idx, path in enumerate(sorted(source.iterdir())):
-        if not path.is_dir():
+        path_depth = len(path.parents) - source_depth
+        if not path.is_dir() or path_depth != 1:
             continue
-        print(idx, path)
-        if idx > 1:
-            continue
-
+        print(idx, path, path_depth)
         process(path)
 
 

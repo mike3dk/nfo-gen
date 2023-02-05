@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<episodedetails>
+
+<id>176101</id>
+
+<uniqueid type="tvdb" default="true">176101</uniqueid>
+
+<title>Pilot</title>
+
+<runtime>42</runtime>
+
+<aired>2005-09-13</aired>
+
+<rating>7.4</rating>
+
+<votes>101</votes>
+
+<season>1</season>
+
+<episode>1</episode>
+
+<plot>Pilot episode. After returning to Washington, D.C., renowned forensic anthropologist Dr. Temperance Brennan is called in by FBI Special Agent Seeley Booth to aid an FBI investigation involving a set of bones found hidden in a lake.</plot>
+
+<credits>Hart Hanson</credits>
+
+<director>Greg Yaitanes</director>
+
+<actor>
+
+<name>Emily Deschanel</name>
+
+<role>Temperance 'Bones' Brennan</role>
+
+<order>0</order>
+
+<thumb>http://thetvdb.com/banners/actors/40624.jpg</thumb>
+
+<tvdbid>40624</tvdbid>
+
+</actor>
+
+[repeat as necessary]
+
+<gueststar>
+
+<name>Marilyn Sue Perry (Customs Agent)</name>
+
+<role>Guest Star</role>
+
+<order>0</order>
+
+</gueststar>
+
+[repeat as necessary]
+
+<fileinfo>
+
+<streamdetails>
+
+<audio>
+
+<bitrate>192</bitrate>
+
+<channels>2</channels>
+
+<codec>ac3</codec>
+
+<language>eng</language>
+
+<longlanguage>English</longlanguage>
+
+</audio>
+
+<video>
+
+<aspect>1.778</aspect>
+
+<bitrate>4302</bitrate>
+
+<codec>mpeg2video</codec>
+
+<durationinseconds>2538</durationinseconds>
+
+<height>576</height>
+
+<language>eng</language>
+
+<longlanguage>English</longlanguage>
+
+<scantype>Progressive</scantype>
+
+<width>720</width>
+
+<filesize>1454772765</filesize>
+
+</video>
+
+</streamdetails>
+
+</fileinfo>
+
+<dateadded>2018-03-24 18:14:53</dateadded>
+
+<locked>false</locked>
+
+</episodedetails>
