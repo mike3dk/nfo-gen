@@ -4,7 +4,10 @@ from pathlib import Path
 from typing import List, Optional
 
 from jinja2 import Environment, FileSystemLoader
+import pandas as pd
+
 import src.ansicolor as c
+from src.nfo_gen.read_gsheet import read_gsheet
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
@@ -21,25 +24,36 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def process(show_root):
-    print(show_root.name)
-    ## find the torrent file with this name
-
+def process(show_root, df):
     ## extract the information
-
-    current_dir = Path(__file__).parent
-    tpl_path = current_dir / "templates/tvshow.nfo"
-    print(tpl_path)
-
+    title = show_root.name
+    print(f"{c.PURPLE}{title}{c.ENDC}")
+    row_found = df.loc[df["title"] == title]
+    info = (
+        {"title": show_root.name}
+        if row_found.empty
+        else {
+            "title": show_root.name,
+            "year": row_found.iloc[0]["year"],
+            "source": row_found.iloc[0]["source"],
+            "tags": row_found.iloc[0]["tags"],
+        }
+    )
     environment = Environment(loader=FileSystemLoader("templates"))
     template = environment.get_template("tvshow.nfo")
-    rendered = template.render(title=show_root.name)
+
+    rendered = template.render(**info)
 
     filename = show_root / "tvshow.nfo"
     print(filename)
     with open(filename, mode="w", encoding="utf-8") as message:
         message.write(rendered)
-        print(f"{c.YELLOW}... wrote {filename}{c.ENDC}")
+        print(f"{c.YELLOW}>>> wrote {filename}{c.ENDC}")
+
+    if row_found.empty:
+        df2 = pd.DataFrame(info, index=[0], columns=df.columns)
+        df = pd.concat([df, df2], ignore_index=True)
+    return df
 
 
 def main(argv: Optional[List[str]] = None) -> None:
@@ -49,12 +63,16 @@ def main(argv: Optional[List[str]] = None) -> None:
 
     source_depth = len(source.parents)
 
-    for idx, path in enumerate(sorted(source.iterdir())):
+    dframe = read_gsheet()
+    for idx, path in enumerate(sorted(source.rglob("*"))):
         path_depth = len(path.parents) - source_depth
-        if not path.is_dir() or path_depth != 1:
+        if not path.is_dir() or path_depth != 2:
             continue
         print(idx, path, path_depth)
-        process(path)
+        dframe = process(path, dframe)
+
+    print(f"{c.YELLOW}>>> wrote 'tvshows.csv'{c.ENDC}")
+    dframe.to_csv("tvshows.csv", index=False)
 
 
 if __name__ == "__main__":

@@ -2,4 +2,7 @@
 <tvshow>
   <title>{{ title }}</title>
   <uniqueid type="learn" default="true"></uniqueid>
+  <year>{{ year }}</year>
+  <studio>{{ source }}</studio>
+  <genre>{{ tags }}</genre>
 </tvshow>

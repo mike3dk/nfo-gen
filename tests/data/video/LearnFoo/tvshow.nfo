@@ -2,4 +2,7 @@
 <tvshow>
   <title>LearnFoo</title>
   <uniqueid type="learn" default="true"></uniqueid>
+  <year></year>
+  <studio></studio>
+  <tag></tag>
 </tvshow>
