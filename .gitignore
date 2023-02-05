@@ -254,6 +254,7 @@ dist
 
 # CUSTOM
 tmp/
+cred/
 
 # IDE
 .idea/
@@ -270,13 +271,3 @@ tests/junit/
 # .dec
 k8s/built-object-service/*.dec
 k8s/built-object-service/*.plain.yaml
-
-# .vscode
-.vscode/
-
-# macos specific things
-Brewfile
-Brewfile.lock.json
-
-# asdf tool versions
-.tool-versions

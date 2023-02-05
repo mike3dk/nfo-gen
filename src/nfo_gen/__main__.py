@@ -6,8 +6,8 @@ from typing import List, Optional
 from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 
-import src.ansicolor as c
-from src.nfo_gen.read_gsheet import read_gsheet
+import ansicolor as c
+from nfo_gen.gsheet_handler import read_gsheet, write_gsheet
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
@@ -36,6 +36,8 @@ def process(title, path, df):
             "year": row_found.iloc[0]["year"],
             "source": row_found.iloc[0]["source"],
             "tags": row_found.iloc[0]["tags"],
+            "author": row_found.iloc[0]["author"],
+            "url": row_found.iloc[0]["url"],
             "found": "yes",
         }
     )
@@ -91,6 +93,8 @@ def main(argv: Optional[List[str]] = None) -> None:
 
     print(f"{c.YELLOW}>>> wrote 'tvshows.csv'{c.ENDC}")
     dframe.to_csv("tvshows.csv", index=False)
+
+    write_gsheet(dframe)
 
 
 if __name__ == "__main__":
