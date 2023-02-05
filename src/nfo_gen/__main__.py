@@ -1,5 +1,5 @@
 import argparse
-import os
+import subprocess
 from pathlib import Path
 from typing import List, Optional
 
@@ -24,19 +24,19 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def process(show_root, df):
+def process(title, path, df):
     ## extract the information
-    title = show_root.name
     print(f"{c.PURPLE}{title}{c.ENDC}")
     row_found = df.loc[df["title"] == title]
     info = (
-        {"title": show_root.name}
+        {"title": title, "found": "only in file"}
         if row_found.empty
         else {
-            "title": show_root.name,
+            "title": title,
             "year": row_found.iloc[0]["year"],
             "source": row_found.iloc[0]["source"],
             "tags": row_found.iloc[0]["tags"],
+            "found": "yes",
         }
     )
     environment = Environment(loader=FileSystemLoader("templates"))
@@ -44,7 +44,7 @@ def process(show_root, df):
 
     rendered = template.render(**info)
 
-    filename = show_root / "tvshow.nfo"
+    filename = f"{path}/tvshow.nfo"
     print(filename)
     with open(filename, mode="w", encoding="utf-8") as message:
         message.write(rendered)
@@ -53,7 +53,15 @@ def process(show_root, df):
     if row_found.empty:
         df2 = pd.DataFrame(info, index=[0], columns=df.columns)
         df = pd.concat([df, df2], ignore_index=True)
+    else:
+        df.loc[df["title"] == title, "found"] = "YES"
+
     return df
+
+
+def clean(path, root):
+    ret = path.replace(root, "")
+    return ret.split("/")[-1]
 
 
 def main(argv: Optional[List[str]] = None) -> None:
@@ -64,12 +72,22 @@ def main(argv: Optional[List[str]] = None) -> None:
     source_depth = len(source.parents)
 
     dframe = read_gsheet()
-    for idx, path in enumerate(sorted(source.rglob("*"))):
-        path_depth = len(path.parents) - source_depth
-        if not path.is_dir() or path_depth != 2:
-            continue
-        print(idx, path, path_depth)
-        dframe = process(path, dframe)
+    dframe["found"] = "only in sheet"
+    # for idx, path in enumerate(sorted(source.rglob("*"))):
+    #     path_depth = len(path.parents) - source_depth
+    #     if not path.is_dir() or path_depth != 2:
+    #         continue
+    #     print(idx, path, path_depth)
+    #     dframe = process(path, dframe)
+
+    cmd = f"find {source} -type d -mindepth 2 -maxdepth 2"
+    res = subprocess.check_output(cmd, shell=True)
+    res = res.decode("utf-8")
+    paths = res.splitlines()
+    rows = [(clean(p, source.as_posix()), p) for p in paths]
+    for idx, (title, path) in enumerate(sorted(rows)):
+        print(idx, title, path)
+        dframe = process(title, path, dframe)
 
     print(f"{c.YELLOW}>>> wrote 'tvshows.csv'{c.ENDC}")
     dframe.to_csv("tvshows.csv", index=False)

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <tvshow>
-  <title>LearnFoo</title>
+  <title>/video/LearnFoo</title>
   <uniqueid type="learn" default="true"></uniqueid>
   <year></year>
   <studio></studio>
-  <tag></tag>
+  <genre></genre>
 </tvshow>
