@@ -6,7 +6,9 @@
   <premiered>{{ year }}</premiered>
   <director>{{ author }}</director>
   <studio>{{ source }}</studio>
-  <genre>{{ tags }}</genre>
+  {% for tag in tags %}
+  <genre>{{ tag }}</genre>
+  {% endfor %}
   <tag>{{ tag }}</tag>
   <url>{{ url }}</url>
   <thumb>

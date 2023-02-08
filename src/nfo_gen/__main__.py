@@ -35,7 +35,7 @@ def process(title, path, df):
             "title": title,
             "year": row_found.iloc[0]["year"],
             "source": row_found.iloc[0]["source"],
-            "tags": row_found.iloc[0]["tags"],
+            "tags": [x.strip() for x in row_found.iloc[0]["tags"].split(",")],
             "author": row_found.iloc[0]["author"],
             "url": row_found.iloc[0]["url"],
             "image": row_found.iloc[0]["image"],
@@ -93,7 +93,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         dframe = process(title, path, dframe)
 
     print(f"{c.YELLOW}>>> wrote 'tvshows.csv'{c.ENDC}")
-    dframe.to_csv("tvshows.csv", index=False)
+    dframe.to_csv("tmp/tvshows.csv", index=False)
 
     write_gsheet(dframe)
 
