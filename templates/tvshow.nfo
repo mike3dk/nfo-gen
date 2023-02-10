@@ -6,10 +6,8 @@
   <premiered>{{ year }}</premiered>
   <director>{{ author }}</director>
   <studio>{{ source }}</studio>
-  {% for tag in tags %}
-  <genre>{{ tag }}</genre>
-  {% endfor %}
-  <tag>{{ tag }}</tag>
+  <genre>{{ tags }}</genre>
+  <tag>{{ tags }}</tag>
   <url>{{ url }}</url>
   <thumb>
     {{ image }}

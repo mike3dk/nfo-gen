@@ -35,7 +35,9 @@ def process(title, path, df):
             "title": title,
             "year": row_found.iloc[0]["year"],
             "source": row_found.iloc[0]["source"],
-            "tags": [x.strip() for x in row_found.iloc[0]["tags"].split(",")],
+            "tags": " / ".join(
+                [x.strip() for x in row_found.iloc[0]["tags"].split(",")]
+            ),
             "author": row_found.iloc[0]["author"],
             "url": row_found.iloc[0]["url"],
             "image": row_found.iloc[0]["image"],
