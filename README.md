@@ -5,6 +5,6 @@
 ## usage
 ```
 poetry shell
-python src/nfo_gen
+python src/nfo_gen \
+--input-directories="media_folder_1,media_folder_2"
 ```
-

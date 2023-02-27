@@ -10,16 +10,23 @@ import ansicolor as c
 from nfo_gen.gsheet_handler import read_gsheet, write_gsheet
 
 
+class SplitArgs(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, values.split(","))
+
+
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        "--input-directory",
-        type=Path,
+        "--input-directories",
+        # type=List[Path],
         required=True,
-        help="Input directory with emergency responder GeoJSON files",
+        default=[],
+        help="Input directories",
+        action=SplitArgs,
     )
     return parser.parse_args(argv)
 
@@ -71,32 +78,33 @@ def clean(path, root):
 
 def main(argv: Optional[List[str]] = None) -> None:
     args = parse_args(argv)
-    source = Path(args.input_directory).expanduser().resolve()
-    print(f"{c.BLUE}>>> nfo gen: {source}{c.ENDC}")
-
-    source_depth = len(source.parents)
+    sources = [Path(inpath).expanduser().resolve() for inpath in args.input_directories]
+    source_depth = 1
 
     dframe = read_gsheet()
     dframe["found"] = "only in sheet"
-    # for idx, path in enumerate(sorted(source.rglob("*"))):
-    #     path_depth = len(path.parents) - source_depth
-    #     if not path.is_dir() or path_depth != 2:
-    #         continue
-    #     print(idx, path, path_depth)
-    #     dframe = process(path, dframe)
 
-    cmd = f"find {source} -type d -mindepth 2 -maxdepth 2"
-    res = subprocess.check_output(cmd, shell=True)
-    res = res.decode("utf-8")
-    paths = res.splitlines()
-    rows = [(clean(p, source.as_posix()), p) for p in paths]
-    for idx, (title, path) in enumerate(sorted(rows)):
-        print(idx, title, path)
-        dframe = process(title, path, dframe)
+    for source in sources:
+        print(f"{c.BLUE}>>> nfo gen: {source}{c.ENDC}")
+        ## using pythong rglob, too slow
+        # for idx, path in enumerate(sorted(source.rglob("*"))):
+        #     path_depth = len(path.parents) - source_depth
+        #     if not path.is_dir() or path_depth != 2:
+        #         continue
+        #     print(idx, path, path_depth)
+        #     dframe = process(path, dframe)
+
+        cmd = f"find {source} -type d -mindepth {source_depth} -maxdepth {source_depth}"
+        res = subprocess.check_output(cmd, shell=True)
+        res = res.decode("utf-8")
+        paths = res.splitlines()
+        rows = [(clean(p, source.as_posix()), p) for p in paths]
+        for idx, (title, path) in enumerate(sorted(rows)):
+            print(idx, title, path)
+            dframe = process(title, path, dframe)
 
     print(f"{c.YELLOW}>>> wrote 'tvshows.csv'{c.ENDC}")
     dframe.to_csv("tmp/tvshows.csv", index=False)
-
     write_gsheet(dframe)
 
 
