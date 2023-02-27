@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "nfo_gen"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "~3.10"
 jinja2 = "^3.1.2"
 pandas = "^1.5.3"
 pygsheets = "^2.0.6"
